@@ -3,19 +3,19 @@ import { ROUTES } from "../../constants";
 
 interface SearchBarItemProps {
   id: number;
-  description: string;
+  title: string;
   price: number;
   imgUrl: string;
 }
 
 const SearchBarItem: FC<SearchBarItemProps> = ({
   id,
-  description,
+  title,
   price,
   imgUrl,
 }) => {
   const src = imgUrl ? imgUrl : "/images/placeholder.png";
-  const alt = description ? description : "Image here";
+  const alt = title ? title : "Image here";
 
   return (
     // can be Link from "react-router-dom" or from "next/link" in NextJS
@@ -27,9 +27,7 @@ const SearchBarItem: FC<SearchBarItemProps> = ({
       </div>
 
       <div className="p-2 pl-5 text-xs text-left w-3/4">
-        {description && (
-          <div className="uppercase line-clamp-2 mb-2">{description}</div>
-        )}
+        {title && <div className="uppercase line-clamp-2 mb-2">{title}</div>}
         {price && <strong className="block">$ {price.toFixed(2)}</strong>}
       </div>
     </a>
