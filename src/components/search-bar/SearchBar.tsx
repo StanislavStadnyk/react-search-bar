@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import useDebounce from "../../hooks";
 import SearchBarInput from "./SearchBarInput";
 import SearchBarDropdown from "./SearchBarDropdown";

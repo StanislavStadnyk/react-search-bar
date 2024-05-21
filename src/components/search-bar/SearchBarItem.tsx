@@ -1,12 +1,15 @@
-import React, { FC } from "react";
+import { FC } from "react";
+import { ROUTES } from "../../constants";
 
 interface SearchBarItemProps {
+  id: number;
   description: string;
   price: number;
   imgUrl: string;
 }
 
 const SearchBarItem: FC<SearchBarItemProps> = ({
+  id,
   description,
   price,
   imgUrl,
@@ -15,8 +18,9 @@ const SearchBarItem: FC<SearchBarItemProps> = ({
   const alt = description ? description : "Image here";
 
   return (
-    <div className="flex">
-      <div className="w-1/4 self-start pb-">
+    // can be Link from "react-router-dom" or from "next/link" in NextJS
+    <a href={`${ROUTES.PRODUCT}/${id}`} className="flex">
+      <div className="w-1/4 self-start">
         <div className="ratio-img">
           <img src={src} alt={alt} />
         </div>
@@ -28,7 +32,7 @@ const SearchBarItem: FC<SearchBarItemProps> = ({
         )}
         {price && <strong className="block">$ {price.toFixed(2)}</strong>}
       </div>
-    </div>
+    </a>
   );
 };
 

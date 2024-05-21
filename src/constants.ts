@@ -7,3 +7,7 @@ export const API_URLS = {
 export const QUERY_PARAMS = {
   QUERY: "q",
 } as const;
+
+export const ROUTES = {
+  PRODUCT: "/product",
+} as const;

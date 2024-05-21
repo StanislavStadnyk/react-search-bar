@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { SearchBarProductProps } from "./types";
 import Spinner from "../spinner/Spinner";
 import SearchBarItem from "./SearchBarItem";
@@ -11,19 +11,16 @@ interface SearchBarDropdownProps {
 
 const DropdownList: FC<Pick<SearchBarDropdownProps, "data">> = ({ data }) => (
   <ul className="flex flex-wrap self-start">
-    {data.map((product: SearchBarProductProps) => {
-      const { id, price, description, thumbnail } = product;
-
-      return (
-        <li key={id} className="w-full p-4 md:w-2/4">
-          <SearchBarItem
-            price={price}
-            description={description}
-            imgUrl={thumbnail}
-          />
-        </li>
-      );
-    })}
+    {data.map(({ id, price, description, thumbnail }) => (
+      <li key={id} className="w-full p-4 md:w-2/4">
+        <SearchBarItem
+          id={id}
+          price={price}
+          description={description}
+          imgUrl={thumbnail}
+        />
+      </li>
+    ))}
   </ul>
 );
 
@@ -40,13 +37,13 @@ const SearchBarDropdown: FC<SearchBarDropdownProps> = ({
     <p>No data</p>
   );
 
-  const dropDownContent = error ? <p>{error}</p> : <>{dropDownResult}</>;
+  const dropDownContent = error ? <p>{error}</p> : dropDownResult;
 
   return (
     <div
       className={`absolute top-full left-5 right-5 bg-white text-black min-h-52 max-h-96 overflow-x-hidden overflow-y-auto flex justify-center items-center ${errorCls}`}
     >
-      {isLoading ? <Spinner /> : <>{dropDownContent}</>}
+      {isLoading ? <Spinner /> : dropDownContent}
     </div>
   );
 };
