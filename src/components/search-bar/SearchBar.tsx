@@ -21,6 +21,7 @@ const SearchBar = () => {
     if (!query) {
       setData([]);
       setIsLoading(true);
+      setError("");
     }
   };
 
