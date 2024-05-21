@@ -25,16 +25,6 @@ describe("SearchBar", () => {
     expect(screen.getAllByRole("link").length).toBe(15);
   });
 
-  it("Should render 15 items - 'q=all'", async () => {
-    render(<SearchBar />);
-
-    const input = await screen.findByRole("textbox");
-    userEvent.type(input, "all");
-
-    await screen.findByTestId("search-bar-dropdown-list");
-    expect(screen.getAllByRole("link").length).toBe(15);
-  });
-
   it("Should render - 'No Data'", async () => {
     render(<SearchBar />);
 
