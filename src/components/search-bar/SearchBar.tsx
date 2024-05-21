@@ -3,43 +3,51 @@ import useDebounce from "../../hooks";
 import SearchBarInput from "./SearchBarInput";
 import SearchBarDropdown from "./SearchBarDropdown";
 import { SearchBarProductProps } from "./types";
-import { fetchSearchData } from "./helpers";
+import axios from "axios";
+import { API_URLS, QUERY_PARAMS } from "../../constants";
 
 const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [data, setData] = useState<SearchBarProductProps[] | []>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // we can't use "useDeferredValue" hook on powerful machines, still need to use custom hook
-  const debounceValue = useDebounce(query, 500);
+  const [debounceValue, isDebounced] = useDebounce(query, 500);
 
   const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setQuery(query);
-
-    if (!query) {
-      setData([]);
-      setIsLoading(true);
-      setError("");
-    }
   };
 
   const handleInputClear = () => {
     setQuery("");
-    setData([]);
-    setIsLoading(true);
-    setError("");
   };
 
   useEffect(() => {
-    debounceValue &&
-      fetchSearchData({
-        query: debounceValue,
-        setData,
-        setError,
-        setIsLoading,
-      });
+    if (!debounceValue) {
+      setError("");
+      setData([]);
+      return;
+    }
+
+    (async () => {
+      setIsLoading(true);
+
+      try {
+        const response = await axios.get(API_URLS.PRODUCT_SEARCH, {
+          params: {
+            [QUERY_PARAMS.QUERY]: debounceValue,
+          },
+        });
+
+        const products = response?.data?.products || [];
+        setData(products);
+      } catch (error) {
+        setError("Error fetching search data");
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   }, [debounceValue]);
 
   return (
@@ -50,7 +58,11 @@ const SearchBar = () => {
         onClear={handleInputClear}
       />
       {query && (
-        <SearchBarDropdown data={data} isLoading={isLoading} error={error} />
+        <SearchBarDropdown
+          data={data}
+          isLoading={isLoading || isDebounced}
+          error={error}
+        />
       )}
     </div>
   );
