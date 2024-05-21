@@ -1,10 +1,11 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, Suspense, useEffect, useState, lazy } from "react";
 import useDebounce from "../../hooks";
 import SearchBarInput from "./SearchBarInput";
-import SearchBarDropdown from "./SearchBarDropdown";
 import { SearchBarProductProps } from "./types";
 import axios from "axios";
 import { API_URLS, QUERY_PARAMS } from "../../constants";
+import Spinner from "../spinner/Spinner";
+const SearchBarDropdownLazy = lazy(() => import("./SearchBarDropdown"));
 
 const SearchBar = () => {
   const [query, setQuery] = useState("");
@@ -58,11 +59,20 @@ const SearchBar = () => {
         onClear={handleInputClear}
       />
       {query && (
-        <SearchBarDropdown
-          data={data}
-          isLoading={isLoading || isDebounced}
-          error={error}
-        />
+        <Suspense
+          fallback={
+            // it can be a common component for "fallback" and for "SearchBarDropdown"
+            <div className="absolute top-full left-5 right-5 bg-white text-black min-h-52 max-h-96 overflow-x-hidden overflow-y-auto flex justify-center items-center">
+              <Spinner />
+            </div>
+          }
+        >
+          <SearchBarDropdownLazy
+            data={data}
+            isLoading={isLoading || isDebounced}
+            error={error}
+          />
+        </Suspense>
       )}
     </div>
   );
